@@ -16,9 +16,10 @@ const Home = () => {
         </View>
         <View>
             <PropertyChecks title ={"Lower-case Alphabets"}/>
-            <PropertyChecks title ={"Lower-case Alphabets"}/>
-            <PropertyChecks title ={"Lower-case Alphabets"}/>
-            <PropertyChecks title ={"Lower-case Alphabets"}/>
+            <PropertyChecks title ={"Upper-case Alphabets"}/>
+            <PropertyChecks title ={"Include Numbers"}/>
+            <PropertyChecks title ={"Include special Characters"}/>
+            
         </View>
       
     </View>

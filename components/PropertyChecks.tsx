@@ -1,18 +1,26 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
+import Checkbox from '@react-native-community/checkbox';
 
 interface Props {
     title: string
     children?:React.ReactNode
 }
 const PropertyChecks = ({title}:Props) => {
+  const [toggleCheckBox,setToggleCheckBox] =  useState(false)
   return (
     <View style={styles.container}>
       <View >
-        <Text>{title} </Text>
+        <Text style={styles.title}>{title} </Text>
       </View>
       <View>
-        <Text>Check Box</Text>
+        <Checkbox
+        value={toggleCheckBox}
+        onValueChange={()=>setToggleCheckBox(!toggleCheckBox)}
+        onCheckColor="red" 
+        onFillColor="red" 
+        tintColor="red"
+        />
       </View>
     </View>
   )
@@ -32,4 +40,8 @@ const styles = StyleSheet.create({
         borderColor:"white",
         borderWidth:1,
         },
+    title:{
+      fontSize:14,
+      color:"white",
+    }
 })
