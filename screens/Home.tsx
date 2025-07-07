@@ -2,6 +2,7 @@ import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 import PropertyChecks from '../components/PropertyChecks'
 import PrimaryButton from '../components/PrimaryButton'
+import ResultModel from '../components/ResultModel'
 
 const Home = () => {
   return (
@@ -26,6 +27,7 @@ const Home = () => {
             <PrimaryButton>Generate Button</PrimaryButton>
             <PrimaryButton>All Reset</PrimaryButton>
         </View>
+        <ResultModel/>
       
     </View>
   )
