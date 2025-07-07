@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 import PropertyChecks from '../components/PropertyChecks'
+import PrimaryButton from '../components/PrimaryButton'
 
 const Home = () => {
   return (
@@ -12,14 +13,18 @@ const Home = () => {
             <Text style={styles.textInputLabel}>Number of Character:</Text>
             <TextInput 
             style={styles.textInputArea}
-            keyboardType='numeric'/>
+            keyboardType='numeric'
+            />
         </View>
         <View>
             <PropertyChecks title ={"Lower-case Alphabets"}/>
             <PropertyChecks title ={"Upper-case Alphabets"}/>
             <PropertyChecks title ={"Include Numbers"}/>
-            <PropertyChecks title ={"Include special Characters"}/>
-            
+            <PropertyChecks title ={"Include special Characters"}/>  
+        </View>
+        <View style={{flexDirection:"row"}}>
+            <PrimaryButton>Generate Button</PrimaryButton>
+            <PrimaryButton>All Reset</PrimaryButton>
         </View>
       
     </View>

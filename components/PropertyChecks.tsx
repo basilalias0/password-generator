@@ -17,9 +17,7 @@ const PropertyChecks = ({title}:Props) => {
         <Checkbox
         value={toggleCheckBox}
         onValueChange={()=>setToggleCheckBox(!toggleCheckBox)}
-        onCheckColor="red" 
-        onFillColor="red" 
-        tintColor="red"
+        tintColors={{ true: '#BBBBBB', false: '#BBBBBB' }} 
         />
       </View>
     </View>
