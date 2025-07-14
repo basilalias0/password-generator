@@ -4,9 +4,12 @@ import React from 'react'
 interface Props {
     title?: string
     children?:React.ReactNode
+    onPress?: () => void
+    setCharacteristics ?: (characteristics: {}) => void
+    characteristics ?: {}
 }
 
-const PrimaryButton = ({title,children}:Props) => {
+const PrimaryButton = ({title,children,onPress}:Props) => {
   return (
     
         <View style={{flex:1,}}>
@@ -15,7 +18,8 @@ const PrimaryButton = ({title,children}:Props) => {
                 backgroundColor: pressed ? '#333' : '#f0f0f0'
             },
                 styles.container
-            ]}>
+            ]}
+            onPress={onPress}>
                {({ pressed }) =>(
             <Text style={[styles.innerContainer,
                 {color:pressed?"#f0f0f0":"#333"}]}

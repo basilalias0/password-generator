@@ -1,10 +1,47 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import PropertyChecks from '../components/PropertyChecks'
 import PrimaryButton from '../components/PrimaryButton'
 import ResultModel from '../components/ResultModel'
 
 const Home = () => {
+    const [passwordCharacteristics,setPasswordCharacteristics] = useState({
+        numberOfCharacter:0,
+        lowerCase:true,
+        upperCase:true,
+        number:true,
+        specialChar:true
+    })
+    const [passwordGenerated,setPasswordGenerated] = useState("")
+    const [modalVisible, setModalVisible] = useState(false);
+
+    function generateRandomString() {
+    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+    const numberChars = '0123456789';
+    const specialChars = '!@#$'; // You can customize this set
+
+    const allChars = uppercaseChars + lowercaseChars + numberChars + specialChars;
+
+    let result = '';
+    // Ensure at least one of each type if length allows
+    if (passwordCharacteristics.numberOfCharacter >= 4) {
+        result += uppercaseChars.charAt(Math.floor(Math.random() * uppercaseChars.length));
+        result += lowercaseChars.charAt(Math.floor(Math.random() * lowercaseChars.length));
+        result += numberChars.charAt(Math.floor(Math.random() * numberChars.length));
+        result += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+    }
+
+    // Fill the rest of the string with random characters from the combined pool
+    for (let i = result.length; i < passwordCharacteristics.numberOfCharacter; i++) {
+        result += allChars.charAt(Math.floor(Math.random() * allChars.length));
+    }
+
+    // Shuffle the string to randomize the positions of required characters
+    // (This is important so the first four characters aren't always a fixed type)
+    setModalVisible(true)
+    setPasswordGenerated( result.split('').sort(() => 0.5 - Math.random()).join(''))
+}
   return (
     <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -15,25 +52,48 @@ const Home = () => {
             <TextInput 
             style={styles.textInputArea}
             keyboardType='numeric'
+            value={passwordCharacteristics.numberOfCharacter.toString()}
+            onChangeText={(newValue)=>{
+                        setPasswordCharacteristics(prevState => {
+                            const value = Number(newValue)
+                            return (
+                                {
+                            ...prevState, 
+                            numberOfCharacter: typeof value==="number"? value:0
+                        })})
+            }}          
             />
         </View>
         <View>
-            <PropertyChecks title ={"Lower-case Alphabets"}/>
-            <PropertyChecks title ={"Upper-case Alphabets"}/>
-            <PropertyChecks title ={"Include Numbers"}/>
-            <PropertyChecks title ={"Include special Characters"}/>  
+            <PropertyChecks setPassChar={setPasswordCharacteristics} 
+            passChar={passwordCharacteristics} title ={"Lower-case Alphabets"}/>
+            <PropertyChecks setPassChar={setPasswordCharacteristics} 
+            passChar={passwordCharacteristics} title ={"Upper-case Alphabets"}/>
+            <PropertyChecks setPassChar={setPasswordCharacteristics} 
+            passChar={passwordCharacteristics} title ={"Include Numbers"}/>
+            <PropertyChecks setPassChar={setPasswordCharacteristics}
+            passChar={passwordCharacteristics} title ={"Include Special Characters"}/>  
         </View>
         <View style={{flexDirection:"row"}}>
-            <PrimaryButton>Generate Button</PrimaryButton>
-            <PrimaryButton>All Reset</PrimaryButton>
+            <PrimaryButton onPress={generateRandomString}>Generate Button</PrimaryButton>
+            <PrimaryButton onPress={()=>setPasswordCharacteristics({
+                numberOfCharacter:0,
+                lowerCase:false,
+                upperCase:false,
+                number:false,
+                specialChar:false
+            })} >All Reset</PrimaryButton>
         </View>
-        <ResultModel/>
+        {modalVisible && <ResultModel password={passwordGenerated} modalVisible={modalVisible} setModalVisible={setModalVisible}/>}
+        
       
     </View>
   )
 }
 
 export default Home
+
+
 
 const styles = StyleSheet.create({
     container: {

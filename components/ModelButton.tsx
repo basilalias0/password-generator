@@ -3,7 +3,7 @@ import React from 'react'
 
 interface Props {
     onPress: (value:boolean) => void
-    modalVisible:boolean
+    modalVisible?:boolean
     title?: string
     children?:React.ReactNode
 }

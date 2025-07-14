@@ -1,12 +1,23 @@
-import { Dimensions, Modal, StyleSheet, Text, View } from 'react-native'
+import { Alert, Dimensions, Modal, Share, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import PrimaryButton from './PrimaryButton'
 import ModelButton from './ModelButton'
 
-const ResultModel = () => {
+interface Props{
+    password:string,
+    modalVisible:boolean
+    setModalVisible:(value:boolean)=> void
+}
+
+const ResultModel = ({password,setModalVisible,modalVisible}:Props) => {
     const screeHeight = Dimensions.get('screen').height
     const screeWidth= Dimensions.get('screen').width
-    const [modalVisible, setModalVisible] = useState(true);
+    
+
+    const handleShare = async ()=>{
+        Alert.alert(password)
+
+    }
   return (
         <Modal
         animationType='slide'  // Slides up from the bottom
@@ -17,11 +28,11 @@ const ResultModel = () => {
                 {height:screeHeight*0.5,marginTop:screeHeight*0.5}]}>
                 <Text style={styles.modelTitle}>Your Password is: </Text>
                 <View style={[styles.passwordContainer,{width:screeWidth*.66}]}>
-                    <Text style={styles.passwordText}>12345678</Text>
+                    <Text style={styles.passwordText}>{password}</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
-                <ModelButton>Save and Share</ModelButton>
-                <ModelButton modalVisible={modalVisible} onPress={setModalVisible}>Close</ModelButton>
+                <ModelButton onPress={()=>handleShare}>Save and Share</ModelButton>
+                <ModelButton modalVisible={modalVisible} onPress={()=>setModalVisible(false)}>Close</ModelButton>
                 </View>
                 
             </View>
