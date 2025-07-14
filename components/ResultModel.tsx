@@ -1,4 +1,4 @@
-import { Alert, Dimensions, Modal, Share, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, Modal, Share, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import PrimaryButton from './PrimaryButton'
 import ModelButton from './ModelButton'
@@ -15,7 +15,17 @@ const ResultModel = ({password,setModalVisible,modalVisible}:Props) => {
     
 
     const handleShare = async ()=>{
-        Alert.alert(password)
+        const message = await Share.share({
+            message: `Your password is ${password} `,
+            title: 'Your password',
+            },{
+                dialogTitle: 'Share',
+            })
+        if (message.action === Share.sharedAction) {
+        console.log('Text shared successfully!');
+      } else if (message.action === Share.dismissedAction) {
+        console.log('Share text dismissed.');
+      }
 
     }
   return (

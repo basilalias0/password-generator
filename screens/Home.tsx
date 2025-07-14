@@ -7,10 +7,10 @@ import ResultModel from '../components/ResultModel'
 const Home = () => {
     const [passwordCharacteristics,setPasswordCharacteristics] = useState({
         numberOfCharacter:0,
-        lowerCase:true,
-        upperCase:true,
-        number:true,
-        specialChar:true
+        lowerCase:false,
+        upperCase:false,
+        number:false,
+        specialChar:false
     })
     const [passwordGenerated,setPasswordGenerated] = useState("")
     const [modalVisible, setModalVisible] = useState(false);
@@ -26,10 +26,18 @@ const Home = () => {
     let result = '';
     // Ensure at least one of each type if length allows
     if (passwordCharacteristics.numberOfCharacter >= 4) {
-        result += uppercaseChars.charAt(Math.floor(Math.random() * uppercaseChars.length));
-        result += lowercaseChars.charAt(Math.floor(Math.random() * lowercaseChars.length));
-        result += numberChars.charAt(Math.floor(Math.random() * numberChars.length));
-        result += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+        if(passwordCharacteristics.lowerCase){
+            result += lowercaseChars.charAt(Math.floor(Math.random() * lowercaseChars.length));
+        }
+        if(passwordCharacteristics.upperCase){
+            result += uppercaseChars.charAt(Math.floor(Math.random() * uppercaseChars.length));
+        }
+        if(passwordCharacteristics.number){
+            result += numberChars.charAt(Math.floor(Math.random() * numberChars.length));
+        }
+        if(passwordCharacteristics.specialChar){
+            result += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+        }
     }
 
     // Fill the rest of the string with random characters from the combined pool
