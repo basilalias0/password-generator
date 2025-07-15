@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import PropertyChecks from '../components/PropertyChecks'
 import PrimaryButton from '../components/PrimaryButton'
 import ResultModel from '../components/ResultModel'
+import {useFormik} from 'formik'
+import * as Yup from 'yup'
 
 const Home = () => {
     const [passwordCharacteristics,setPasswordCharacteristics] = useState({
@@ -14,42 +16,57 @@ const Home = () => {
     })
     const [passwordGenerated,setPasswordGenerated] = useState("")
     const [modalVisible, setModalVisible] = useState(false);
-
-    function generateRandomString() {
-    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const validationSchema = Yup.object({
+        numberOfCharacter:Yup.string()
+        .matches(/^[0-9]+$/, 'Age must be a number')
+        .max(3,"maximum 3 digits")
+        .min(1,"At least 1 digit")
+        .required("Field is req")
+        
+    }) 
+    const formik = useFormik({
+        initialValues: {
+            numberOfCharacter: '',
+            },
+        validationSchema,
+        onSubmit:(values)=>{
+             const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
     const numberChars = '0123456789';
-    const specialChars = '!@#$'; // You can customize this set
+    const specialChars = '!@#$';
 
-    const allChars = uppercaseChars + lowercaseChars + numberChars + specialChars;
+    let allCharsAllowed =''
 
     let result = '';
     // Ensure at least one of each type if length allows
-    if (passwordCharacteristics.numberOfCharacter >= 4) {
+    
         if(passwordCharacteristics.lowerCase){
-            result += lowercaseChars.charAt(Math.floor(Math.random() * lowercaseChars.length));
+            allCharsAllowed += lowercaseChars;
         }
         if(passwordCharacteristics.upperCase){
-            result += uppercaseChars.charAt(Math.floor(Math.random() * uppercaseChars.length));
+            allCharsAllowed += uppercaseChars;
         }
         if(passwordCharacteristics.number){
-            result += numberChars.charAt(Math.floor(Math.random() * numberChars.length));
+            allCharsAllowed += numberChars
         }
         if(passwordCharacteristics.specialChar){
-            result += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
+            allCharsAllowed += specialChars
         }
-    }
+    
 
     // Fill the rest of the string with random characters from the combined pool
-    for (let i = result.length; i < passwordCharacteristics.numberOfCharacter; i++) {
-        result += allChars.charAt(Math.floor(Math.random() * allChars.length));
+    for (let i = result.length; i < Number(values.numberOfCharacter); i++) {
+        result += allCharsAllowed.charAt(Math.floor(Math.random() * allCharsAllowed.length));
     }
 
     // Shuffle the string to randomize the positions of required characters
-    // (This is important so the first four characters aren't always a fixed type)
+    // (This is important so the first four characters aren't always a fixed type
+    
     setModalVisible(true)
-    setPasswordGenerated( result.split('').sort(() => 0.5 - Math.random()).join(''))
-}
+    setPasswordGenerated( result.split('').sort(() => 0.5 - Math.random()).join('')) 
+        }
+    })
+
   return (
     <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -59,19 +76,15 @@ const Home = () => {
             <Text style={styles.textInputLabel}>Number of Character:</Text>
             <TextInput 
             style={styles.textInputArea}
+            
             keyboardType='numeric'
-            value={passwordCharacteristics.numberOfCharacter.toString()}
-            onChangeText={(newValue)=>{
-                        setPasswordCharacteristics(prevState => {
-                            const value = Number(newValue)
-                            return (
-                                {
-                            ...prevState, 
-                            numberOfCharacter: typeof value==="number"? value:0
-                        })})
-            }}          
+            value={formik.values.numberOfCharacter}
+            onBlur={formik.handleBlur('numberOfCharacter')}
+            onChangeText={formik.handleChange('numberOfCharacter')}
             />
         </View>
+        {formik.touched.numberOfCharacter && formik.errors.numberOfCharacter ?
+        <Text style={styles.errorText}>{formik.errors.numberOfCharacter}</Text>:null}
         <View>
             <PropertyChecks setPassChar={setPasswordCharacteristics} 
             passChar={passwordCharacteristics} title ={"Lower-case Alphabets"}/>
@@ -83,7 +96,7 @@ const Home = () => {
             passChar={passwordCharacteristics} title ={"Include Special Characters"}/>  
         </View>
         <View style={{flexDirection:"row"}}>
-            <PrimaryButton onPress={generateRandomString}>Generate Button</PrimaryButton>
+            <PrimaryButton onPress={formik.handleSubmit}>Generate Button</PrimaryButton>
             <PrimaryButton onPress={()=>setPasswordCharacteristics({
                 numberOfCharacter:0,
                 lowerCase:false,
@@ -139,5 +152,9 @@ const styles = StyleSheet.create({
         borderRadius:4,
         color:'#E0E0E0'
     },
+    errorText:{
+        color:'red',
+        fontSize:20,
+    }
 
 })
